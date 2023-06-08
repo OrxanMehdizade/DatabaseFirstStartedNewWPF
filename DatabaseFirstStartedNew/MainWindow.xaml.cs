@@ -18,49 +18,33 @@ namespace DatabaseFirstStartedNew
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
-    /// </summary>
+    /// </summary> 
     public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            //using (var db = new LibraryContext())
-            //{
-            //    var Tables = db.Model.GetEntityTypes().Select(entityType => entityType.GetTableName()).ToList();
-            //    Tables.ForEach(s => ComboClass.Items.Add(s));
-            //}
+            TablesComboBox();
+        }
 
+        private void TablesComboBox()
+        {
+            using (var db = new LibraryContext())
+            {
+                var LibraryTables = db.Model.GetEntityTypes()
+                    .Select(c => c.GetTableName())
+                    .ToList();
+
+                foreach (var item in LibraryTables)
+                {
+                    ComboClass.Items.Add(item);
+                }
+            }
+        }
+
+        private void ComboClass_SelectionChanged(object sender, RoutedEventArgs e)
+        {
 
         }
-        //private void ComboClass_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        //{
-        //    ComboColumns.Items.Clear();
-
-        //    if (ComboClass.SelectedItem is string selectedTable)
-        //    {
-        //        using (var db = new LibraryContext())
-        //        {
-        //            var tables = db.Model.GetEntityTypes().Select(entityType => entityType.GetTableName()).ToList();
-        //            var table = tables.FirstOrDefault(t => t == selectedTable);
-        //            if (table != null)
-        //            {
-        //                var columns = db.Model.FindEntityType(table).GetProperties().Select(p => p.Name).ToList();
-        //                columns.ForEach(c => ComboColumns.Items.Add(c));
-        //            }
-        //        }
-        //    }
-        //}
-
-        //public void PrintLibrary()
-        //{
-        //    using (var db = new LibraryContext())
-        //    {
-        //        var Tables = db.Model.GetEntityTypes().Select(entityType => entityType.GetTableName()).ToList();
-        //        Tables.ForEach(s => ComboClass.Items.Add(s));
-        //    }
-
-        //}
-
-
     }
 }

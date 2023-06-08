@@ -14,7 +14,7 @@
                 </GridView>
             </ListView.View>
         </ListView>
-        <ComboBox x:Name="ComboClass" HorizontalAlignment="Left" Margin="10,10,0,0"  VerticalAlignment="Top" Width="220" Height="30" SelectionChanged="ComboClass_SelectionChanged">
+        <ComboBox x:Name="ComboClass" HorizontalAlignment="Left" Margin="10,10,0,0" SelectionChanged="ComboClass_SelectionChanged"  VerticalAlignment="Top" Width="220" Height="30" >
             <ComboBox.ToolTip>ComboClass</ComboBox.ToolTip>
         </ComboBox>
         <ComboBox x:Name="ComboColumns" HorizontalAlignment="Left" Margin="567,10,0,0" VerticalAlignment="Top" Width="220" Height="30">
