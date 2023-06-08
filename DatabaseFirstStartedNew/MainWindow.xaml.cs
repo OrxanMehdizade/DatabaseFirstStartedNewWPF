@@ -24,26 +24,44 @@ namespace DatabaseFirstStartedNew
         public MainWindow()
         {
             InitializeComponent();
-            TablesComboBox();
-        }
-
-        private void TablesComboBox()
-        {
-            using (var db = new LibraryContext())
-            {
-                var LibraryTables = db.Model.GetEntityTypes()
-                    .Select(c => c.GetTableName())
-                    .ToList();
-
-                foreach (var item in LibraryTables)
-                {
-                    ComboClass.Items.Add(item);
-                }
-            }
+            
         }
 
         private void ComboClass_SelectionChanged(object sender, RoutedEventArgs e)
         {
+            using (LibraryContext database = new())
+            {
+                ComboBoxItem? selectedItem = ComboClass.SelectedItem as ComboBoxItem;
+
+
+
+                if (selectedItem!.Content.ToString() == "Authors")
+                {
+                    ComboColumns.Items.Clear();
+
+
+
+                    var authors = database.Authors;
+
+                    authors.ToList().ForEach(a => ComboColumns.Items.Add($"{a.FirstName} {a.LastName}"));
+                }
+                else if (selectedItem!.Content.ToString() == "Themes")
+                {
+                    ComboColumns.Items.Clear();
+
+                    var themes = database.Themes;
+
+                    themes.ToList().ForEach(t => ComboColumns.Items.Add($"{t.Name}"));
+                }
+                else if (selectedItem!.Content.ToString() == "Categories")
+                {
+                    ComboColumns.Items.Clear();
+
+                    var categories = database.Categories;
+
+                    categories.ToList().ForEach(c => ComboColumns.Items.Add($"{c.Name}"));
+                }
+            }
 
         }
     }
