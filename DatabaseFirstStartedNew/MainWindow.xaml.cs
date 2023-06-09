@@ -24,45 +24,97 @@ namespace DatabaseFirstStartedNew
         public MainWindow()
         {
             InitializeComponent();
-            
+            FillTableComboBox();
+
+
+        }
+        private void FillTableComboBox()
+        {
+            using (var db = new LibraryContext())
+            {
+                var tableNames = db.Model.GetEntityTypes()
+                    .Select(c => c.GetTableName())
+                    .ToList();
+
+                ComboClass.Items.Clear();
+
+                foreach (var tableName in tableNames)
+                {
+                    ComboClass.Items.Add(new ComboBoxItem { Content = tableName });
+                }
+            }
         }
 
         private void ComboClass_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            using (LibraryContext database = new())
+
+            using (var database = new LibraryContext())
             {
                 ComboBoxItem? selectedItem = ComboClass.SelectedItem as ComboBoxItem;
 
-
-
-                if (selectedItem!.Content.ToString() == "Authors")
+                if (selectedItem != null)
                 {
+                    string selectedTable = selectedItem.Content.ToString()!;
+
                     ComboColumns.Items.Clear();
 
-
-
-                    var authors = database.Authors;
-
-                    authors.ToList().ForEach(a => ComboColumns.Items.Add($"{a.FirstName} {a.LastName}"));
-                }
-                else if (selectedItem!.Content.ToString() == "Themes")
-                {
-                    ComboColumns.Items.Clear();
-
-                    var themes = database.Themes;
-
-                    themes.ToList().ForEach(t => ComboColumns.Items.Add($"{t.Name}"));
-                }
-                else if (selectedItem!.Content.ToString() == "Categories")
-                {
-                    ComboColumns.Items.Clear();
-
-                    var categories = database.Categories;
-
-                    categories.ToList().ForEach(c => ComboColumns.Items.Add($"{c.Name}"));
+                    if (selectedTable == "Authors")
+                    {
+                        var authors = database.Authors.ToList();
+                        authors.ForEach(a => ComboColumns.Items.Add($"{a.FirstName} {a.LastName}"));
+                    }
+                    else if (selectedTable == "Themes")
+                    {
+                        var themes = database.Themes.ToList();
+                        themes.ForEach(t => ComboColumns.Items.Add($"{t.Name}"));
+                    }
+                    else if (selectedTable == "Categories")
+                    {
+                        var categories = database.Categories.ToList();
+                        categories.ForEach(c => ComboColumns.Items.Add($"{c.Name}"));
+                    }
                 }
             }
 
         }
+
+        private void ComboColumns_SelectionChanged(object sender, RoutedEventArgs e)
+        {
+            string selectedColumn = ComboColumns.SelectedItem.ToString();
+            int bookCount = GetBookCount(selectedColumn);
+
+            ListViewBooksCount.Items.Clear();
+            ListViewBooksCount.Items.Add(bookCount);
+        }
+
+        private int GetBookCount(string columnName)
+        {
+            int bookCount = 0;
+            using (var dbContext = new LibraryContext())
+            {
+                if (columnName == "Authors")
+                {
+                    bookCount = dbContext.Books.Count(b => b.IdAuthor ==4 );
+                }
+                else if (columnName == "Column2")
+                {
+                    bookCount = dbContext.Books.Where(b => b.Name == "New").Count();
+                }
+            }
+
+            return bookCount;
+        }
+
+
+
+
+        //void print(List<LibraryContext> tableNames)
+        //{
+        //    foreach (var tableName in tableNames)
+        //    {
+        //        ComboColumns.Items.Add(new ComboBoxItem { Content = tableName });
+        //    }
+        //}
+
     }
 }

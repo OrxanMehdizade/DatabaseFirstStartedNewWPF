@@ -16,11 +16,8 @@
         </ListView>
         <ComboBox x:Name="ComboClass" HorizontalAlignment="Left" Margin="10,10,0,0" SelectionChanged="ComboClass_SelectionChanged"  VerticalAlignment="Top" Width="220" Height="30" >
             <ComboBox.ToolTip>ComboClass</ComboBox.ToolTip>
-            <ComboBoxItem Content="Authors"></ComboBoxItem>
-            <ComboBoxItem Content="Themes"></ComboBoxItem>
-            <ComboBoxItem Content="Catagories"></ComboBoxItem>
         </ComboBox>
-        <ComboBox x:Name="ComboColumns" HorizontalAlignment="Left" Margin="567,10,0,0" VerticalAlignment="Top" Width="220" Height="30">
+        <ComboBox x:Name="ComboColumns" HorizontalAlignment="Left" Margin="567,10,0,0" SelectionChanged="ComboColumns_SelectionChanged" VerticalAlignment="Top" Width="220" Height="30">
             <ComboBox.ToolTip>ComboColumns</ComboBox.ToolTip>
         </ComboBox>
 
