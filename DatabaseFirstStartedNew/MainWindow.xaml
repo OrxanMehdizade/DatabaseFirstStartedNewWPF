@@ -5,12 +5,14 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DatabaseFirstStartedNew"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <ListView x:Name="ListViewBooksCount" Height="370" VerticalAlignment="Bottom">
+        Title="DataBaseFirst" Height="450" Width="800">
+    <Grid Background="Tomato">
+        <ListView x:Name="ListViewBooksCount" Height="370" VerticalAlignment="Bottom" ItemsSource="{Binding GetBooks}" Background="Tomato">
             <ListView.View>
-                <GridView>
-                    <GridViewColumn/>
+                <GridView >
+                    <GridViewColumn Header="Name"  Width="280" DisplayMemberBinding="{Binding Name}"  />
+                    <GridViewColumn Header="Pages" Width="240" DisplayMemberBinding="{Binding Pages}" />
+                    <GridViewColumn Header="YearPress" Width="240" DisplayMemberBinding="{Binding YearPress}" />
                 </GridView>
             </ListView.View>
         </ListView>

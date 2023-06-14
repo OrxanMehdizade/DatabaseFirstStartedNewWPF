@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,10 +22,12 @@ namespace DatabaseFirstStartedNew
     /// </summary> 
     public partial class MainWindow : Window
     {
+        public ObservableCollection<Book> GetBooks { get; } = new();
         public MainWindow()
         {
             InitializeComponent();
             FillTableComboBox();
+            DataContext = this;
 
 
         }
@@ -77,44 +80,57 @@ namespace DatabaseFirstStartedNew
             }
 
         }
-
+  
         private void ComboColumns_SelectionChanged(object sender, RoutedEventArgs e)
         {
-            string selectedColumn = ComboColumns.SelectedItem.ToString();
-            int bookCount = GetBookCount(selectedColumn);
-
-            ListViewBooksCount.Items.Clear();
-            ListViewBooksCount.Items.Add(bookCount);
-        }
-
-        private int GetBookCount(string columnName)
-        {
-            int bookCount = 0;
-            using (var dbContext = new LibraryContext())
+            using (LibraryContext database = new())
             {
-                if (columnName == "Authors")
+                ComboBoxItem? selectedItem = ComboClass.SelectedItem as ComboBoxItem;
+
+                if (selectedItem.Content.ToString() == "Authors")
                 {
-                    bookCount = dbContext.Books.Count(b => b.IdAuthor ==4 );
+                    GetBooks.Clear();
+                    var author = ComboColumns.SelectedItem as string;
+                    if (author != null)
+                    {
+                        var authorbook = database.Books.Join(
+                            database.Authors, c => c.IdAuthor, d => d.Id, (c, d) => new { Book = c, Author = d })
+                            .ToList()
+                            .Where(y => $"{y.Author.FirstName} {y.Author.LastName}" == author).
+                            Select(y => y.Book).ToList();
+                        authorbook.ForEach(s => GetBooks.Add(s));
+                    }
                 }
-                else if (columnName == "Column2")
+                else if (selectedItem.Content.ToString() == "Themes")
                 {
-                    bookCount = dbContext.Books.Where(b => b.Name == "New").Count();
+                    GetBooks.Clear();
+                    var Themes = ComboColumns.SelectedItem as string;
+                    if (Themes != null)
+                    {
+                        var Themesbook = database.Books.Join(
+                            database.Themes, c => c.IdThemes, d => d.Id, (c, d) => new { Book = c, Themes = d })
+                            .ToList()
+                            .Where(y => $"{y.Themes.Name}" == Themes).
+                            Select(y => y.Book).ToList();
+                        Themesbook.ForEach(s => GetBooks.Add(s));
+                    }
+                }
+                else if (selectedItem.Content.ToString() == "Categories")
+                {
+                    GetBooks.Clear();
+                    var Categories = ComboColumns.SelectedItem as string;
+                    if (Categories != null)
+                    {
+                        var Categoriesbook = database.Books.Join(
+                            database.Categories, c => c.IdCategory, d => d.Id, (c, d) => new { Book = c, Categories = d })
+                            .ToList()
+                            .Where(y => $"{y.Categories.Name}" == Categories).
+                            Select(y => y.Book).ToList();
+                        Categoriesbook.ForEach(s => GetBooks.Add(s));
+                    }
                 }
             }
-
-            return bookCount;
         }
-
-
-
-
-        //void print(List<LibraryContext> tableNames)
-        //{
-        //    foreach (var tableName in tableNames)
-        //    {
-        //        ComboColumns.Items.Add(new ComboBoxItem { Content = tableName });
-        //    }
-        //}
 
     }
 }
